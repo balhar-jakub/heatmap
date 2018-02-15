@@ -18,3 +18,8 @@ div#root {
 .show-grid>div {
     height: 100%;
 }
+
+.sidebar {
+    overflow: auto;
+    height: 100%;
+}

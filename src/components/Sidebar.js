@@ -15,6 +15,8 @@ class Sidebar extends Component {
         this.state = {
             incrementPerIntensity: 0.025,
             shapeToVisualize: 'square',
+            blur: 10,
+            radius: 1,
             colors: ['#0000ff','#00ffff', '#00ff00', '#ffff00', '#ff0000']
         };
 
@@ -28,19 +30,20 @@ class Sidebar extends Component {
         }
 
         return new WorldWind.HeatMapLayer("HeatMap, Default version", this.props.data, {
-            radius: Sidebar.calculatePointRadius,
+            radius: this.calculatePointRadius,
             tile: tile,
             incrementPerIntensity: this.state.incrementPerIntensity,
+            blur: this.state.blur,
             scale: this.state.colors
         })
     }
 
-    static calculatePointRadius(sector, tileWidth, tileHeight) {
+    calculatePointRadius(sector, tileWidth, tileHeight) {
         let latitude = Math.ceil(Math.abs(sector.maxLatitude - sector.minLatitude));
         if(latitude < 1) {
             return tileHeight;
         } else {
-            return Math.round(tileHeight / latitude); // Make sure that the result is the whole numbers
+            return this.state.radius * Math.round(tileHeight / latitude); // Make sure that the result is the whole numbers
         }
     }
 
@@ -62,17 +65,31 @@ class Sidebar extends Component {
         });
     }
 
+    onRadiusChange(e) {
+        this.setState({
+            radius: e.target.value
+        });
+    }
+
+    onBlurChange(e) {
+        this.setState({
+            blur: e.target.value
+        });
+    }
+
     render() {
         if(this.layer) {
             this.props.wwd.removeLayer(this.layer);
+            this.props.wwd.redraw();
         }
 
-        this.layer = this.rebuildHeatMap();
-        this.props.wwd.addLayer(this.layer);
-        this.props.wwd.redraw();
+        setTimeout(() => {
+            this.layer = this.rebuildHeatMap();
+            this.props.wwd.addLayer(this.layer);
+        }, 1);
 
         return (
-            <div>
+            <div className="sidebar">
                 <h2>HeatMap</h2>
                 <div>
                     In this example it is possible to play with the parameters about HeatMap.
@@ -97,6 +114,18 @@ class Sidebar extends Component {
                         {value: 'square', label: 'Square'},
                         {value: 'circle', label: 'Circle'}
                     ]}
+                />
+                <ControlLabel>Radius ratio</ControlLabel>
+                <FormControl
+                    type="number"
+                    onChange={this.onRadiusChange.bind(this)}
+                    value={this.state.radius}
+                />
+                <ControlLabel>Blur Size in pixels</ControlLabel>
+                <FormControl
+                    type="number"
+                    onChange={this.onBlurChange.bind(this)}
+                    value={this.state.blur}
                 />
             </div>
         );
