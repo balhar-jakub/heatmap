@@ -30,7 +30,7 @@ class Sidebar extends Component {
         }
 
         return new WorldWind.HeatMapLayer("HeatMap, Default version", this.props.data, {
-            radius: this.calculatePointRadius,
+            radius: this.calculatePointRadius.bind(this),
             tile: tile,
             incrementPerIntensity: this.state.incrementPerIntensity,
             blur: this.state.blur,
