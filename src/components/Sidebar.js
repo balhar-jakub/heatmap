@@ -7,6 +7,8 @@ import WorldWind from '@nasaworldwind/worldwind';
 import 'react-select/dist/react-select.css';
 
 import {ControlLabel, FormControl} from 'react-bootstrap';
+import RadiantCircleTile from "../map/RadiantCircleTile";
+import RadiantSquareTile from '../map/RadiantSquareTile';
 
 class Sidebar extends Component {
     constructor(props){
@@ -14,7 +16,7 @@ class Sidebar extends Component {
 
         this.state = {
             incrementPerIntensity: 0.025,
-            shapeToVisualize: 'square',
+            shapeToVisualize: 'square-radient',
             blur: 10,
             radius: 1,
             colors: ['#0000ff','#00ffff', '#00ff00', '#ffff00', '#ff0000']
@@ -27,6 +29,10 @@ class Sidebar extends Component {
         let tile = WorldWind.ColoredSquareTile;
         if(this.state.shapeToVisualize === 'circle') {
             tile = WorldWind.ColoredTile;
+        } else if(this.state.shapeToVisualize === 'circle-radient') {
+            tile = RadiantCircleTile;
+        } else if(this.state.shapeToVisualize === 'square-radient') {
+            tile = RadiantSquareTile;
         }
 
         return new WorldWind.HeatMapLayer("HeatMap, Default version", this.props.data, {
@@ -111,6 +117,8 @@ class Sidebar extends Component {
                     onChange={this.onShapeChange.bind(this)}
                     value={this.state.shapeToVisualize}
                     options={[
+                        {value: 'square-radient', label: 'Square radient'},
+                        {value: 'circle-radient', label: 'Circle radient'},
                         {value: 'square', label: 'Square'},
                         {value: 'circle', label: 'Circle'}
                     ]}

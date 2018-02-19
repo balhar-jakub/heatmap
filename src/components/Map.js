@@ -25,7 +25,15 @@ class Map extends Component {
             let wwd = new WorldWind.WorldWindow("wwd-results");
             this.setState({wwd: wwd});
 
-            let mapLayer = new WorldWind.BMNGLandsatLayer();
+            let mapLayer = new WorldWind.WmsLayer({
+                service: "https://tiles.maps.eox.at/wms",
+                layerNames: "s2cloudless",
+                numLevels: 19,
+                format: "image/png",
+                size: 256,
+                sector: WorldWind.Sector.FULL_SPHERE,
+                levelZeroDelta : new WorldWind.Location(90, 90)
+            }, 'Sentinel-2 Base');
 
             wwd.addLayer(mapLayer);
             wwd.redraw();
