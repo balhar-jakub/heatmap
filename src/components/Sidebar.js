@@ -16,7 +16,7 @@ class Sidebar extends Component {
 
         this.state = {
             incrementPerIntensity: 0.025,
-            shapeToVisualize: 'square-radient',
+            shapeToVisualize: 'circle-radient',
             blur: 10,
             radius: 1,
             colors: ['#0000ff','#00ffff', '#00ff00', '#ffff00', '#ff0000']
